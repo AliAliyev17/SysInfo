@@ -17,11 +17,12 @@ fn main() {
     } else if args[1]=="battery" {
         let mut bat_max = fs::read_to_string("/sys/class/power_supply/BAT1/charge_full").expect("Could not read file.");
         let mut bat_actual = fs::read_to_string("/sys/class/power_supply/BAT1/charge_now").expect("Could not read file.");
-        
-        bat_max.pop(); bat_actual.pop();
+        let mut charging = fs::read_to_string("/sys/class/power_supply/ACAD/online").expect("Could not read file.");
+        bat_max.pop(); bat_actual.pop(); charging.pop();
         
         let bat_max = bat_max.parse::<u32>().unwrap();
         let bat_actual = bat_actual.parse::<u32>().unwrap();
         println!("Battery is {}%", 100*bat_actual/bat_max);
+        if charging == "1" {println!("Charging.");}
     }
 }
